@@ -215,3 +215,87 @@
     scroll-behavior: auto !important;
   }
 }
+
+@layer base {
+  :root {
+    --color-canvas: #F7F2EB;
+    --color-canvas-secondary: #EDE5D8;
+    --color-text: #1E1A14;
+    --color-text-muted: #5C5248;
+    --color-accent: #C85A2A;
+    --color-accent-hover: #A84820;
+    --color-trust: #4A7A5A;
+    --color-border: #D9D1C5;
+    --color-focus: #C85A2A;
+    --font-display: "Tiempos Headline", "Instrument Serif", serif;
+    --font-body: "Aeonik", "Geist Sans", sans-serif;
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+    --space-3xl: 64px;
+    --space-4xl: 96px;
+    --space-5xl: 128px;
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1.0625rem;
+    --text-lg: 1.25rem;
+    --text-xl: 1.5rem;
+    --text-2xl: 1.75rem;
+    --text-3xl: 2.5rem;
+    --text-4xl: 3.5rem;
+    --text-display: 3.5rem;
+    --leading-tight: 1.05;
+    --leading-snug: 1.15;
+    --leading-normal: 1.65;
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-in: cubic-bezier(0.55, 0, 0.75, 0.25);
+  }
+
+  html, body {
+    overflow-x: clip;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  * {
+    outline: 2px solid transparent;
+    outline-offset: 1px;
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 1px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .container-main {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-lg);
+    padding-right: var(--space-lg);
+  }
+}
