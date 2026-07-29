@@ -1,37 +1,37 @@
 {
   "logo": {
-    "url": "",
-    "alt": "",
+    "url": "https://zkvkbpxrxnfynqqeytke.supabase.co/storage/v1/object/public/marketing-assets/test-run-probe-site-test-artifact/cleo/1785366129534-logo-TEST-PLACEHOLDER.png",
+    "alt": "A minimalist vector logo mark for Acme Walkies featuring a geometric leash handle that doubles as a stylized letter A. It uses the locked palette of terracotta and deep brown-black on a parchment back",
     "width": 1024,
     "height": 1024
   },
   "hero": {
-    "url": "",
-    "alt": "",
+    "url": "https://zkvkbpxrxnfynqqeytke.supabase.co/storage/v1/object/public/marketing-assets/test-run-probe-site-test-artifact/cleo/1785366120680-hero-TEST-PLACEHOLDER.png",
+    "alt": "A golden retriever captured mid-stride on a residential sidewalk during the golden hour, emphasizing the unhurried, neighborhood-first feel of Acme Walkies. The low-angle perspective and warm lighting",
     "width": 1920,
     "height": 1080
   },
   "feature_1": {
-    "url": "",
-    "alt": "",
+    "url": "https://zkvkbpxrxnfynqqeytke.supabase.co/storage/v1/object/public/marketing-assets/test-run-probe-site-test-artifact/cleo/1785366120682-feature_1-TEST-PLACEHOLDER.png",
+    "alt": "A tactile, domestic scene of a leather leash hanging on a brass hook against a warm parchment wall, capturing the unhurried neighborhood service vibe. This image establishes trust through familiar, qu",
     "width": 800,
     "height": 600
   },
   "feature_2": {
-    "url": "",
-    "alt": "",
+    "url": "https://zkvkbpxrxnfynqqeytke.supabase.co/storage/v1/object/public/marketing-assets/test-run-probe-site-test-artifact/cleo/1785366121101-feature_2-TEST-PLACEHOLDER.png",
+    "alt": "A domestic, close-up shot of a leather leash and a handwritten note, emphasizing the neighborhood trust and personal touch of the service.\n\nDEFENSE:\n- CHOICE: A tactile composition featuring a leather",
     "width": 800,
     "height": 600
   },
   "feature_3": {
-    "url": "",
-    "alt": "",
+    "url": "https://zkvkbpxrxnfynqqeytke.supabase.co/storage/v1/object/public/marketing-assets/test-run-probe-site-test-artifact/cleo/1785366120641-feature_3-TEST-PLACEHOLDER.png",
+    "alt": "A close-up of a leather leash and a handwritten note, capturing the domestic and unhurried neighborhood service vibe. The warm parchment tones and natural afternoon light reinforce the trust and local",
     "width": 800,
     "height": 600
   },
   "social_proof": {
-    "url": "",
-    "alt": "",
+    "url": "https://zkvkbpxrxnfynqqeytke.supabase.co/storage/v1/object/public/marketing-assets/test-run-probe-site-test-artifact/cleo/1785366138125-social_proof-TEST-PLACEHOLDER.png",
+    "alt": "A domestic, unhurried scene of a leather leash and a handwritten note, capturing the neighborhood-service warmth of Acme Walkies. This image anchors the social proof section by emphasizing personal to",
     "width": 1200,
     "height": 800
   }
