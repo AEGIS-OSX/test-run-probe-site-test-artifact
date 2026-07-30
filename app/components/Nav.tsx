@@ -18,7 +18,7 @@ export default function Nav() {
 
   return (
     <motion.nav
-      className={`sticky top-0 left-0 right-0 z-50 transition-shadow duration-300 ease-out bg-[var(--color-canvas)] ${
+      className={`sticky top-0 left-0 right-0 z-50 bg-[var(--color-canvas)] backdrop-blur-sm border-b border-[var(--color-border)] transition-shadow duration-300 ease-out ${
         scrolled ? "shadow-[0_1px_3px_rgba(0,0,0,0.06)]" : "shadow-none"
       }`}
       initial={{ y: -20, opacity: 0 }}
@@ -29,20 +29,12 @@ export default function Nav() {
         <a href="#hero" className="flex items-center">
           <ProjectImage id="logo" className="h-8 w-auto" />
         </a>
-        <div className="flex items-center gap-8">
-          <a
-            href="#features"
-            className="text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors duration-200 ease-out font-[family-name:var(--font-body)] text-[15px] font-medium"
-          >
-            How it works
-          </a>
-          <a
-            href="#contact"
-            className="text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors duration-200 ease-out font-[family-name:var(--font-body)] text-[15px] font-medium"
-          >
-            Contact
-          </a>
-        </div>
+        <a
+          href="#contact"
+          className="btn-primary"
+        >
+          Get in touch
+        </a>
       </div>
     </motion.nav>
   );
