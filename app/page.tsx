@@ -13,7 +13,7 @@ export default function Home() {
         <Hero />
         <Features />
         <Testimonial />
-        <ContactForm />
+        <ContactForm id="contact" />
       </main>
       <Footer />
     </div>
