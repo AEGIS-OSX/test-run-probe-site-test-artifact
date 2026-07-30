@@ -79,8 +79,8 @@ export default function ContactForm(): JSX.Element {
     >
       <div className="max-w-[1200px] mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] gap-12 lg:gap-16 items-start">
-          {/* Left: Form */}
-          <div className="order-2 lg:order-1">
+          {/* Left column: form or success message */}
+          <div>
             <AnimatePresence mode="wait">
               {isSuccess ? (
                 <motion.div
@@ -89,7 +89,7 @@ export default function ContactForm(): JSX.Element {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -16 }}
                   transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  className="py-12"
+                  className="py-8"
                 >
                   <p className="text-[17px] leading-[1.65] text-[var(--color-text)]">
                     Thanks for reaching out! We&apos;ll be in touch within one business day.
@@ -98,11 +98,11 @@ export default function ContactForm(): JSX.Element {
               ) : (
                 <motion.form
                   key="form"
+                  onSubmit={handleSubmit}
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -16 }}
                   transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  onSubmit={handleSubmit}
                   className="space-y-6"
                   noValidate
                 >
@@ -276,8 +276,8 @@ export default function ContactForm(): JSX.Element {
             </AnimatePresence>
           </div>
 
-          {/* Right: Content */}
-          <div className="order-1 lg:order-2">
+          {/* Right column: content */}
+          <div className="lg:pt-4">
             <h2
               id="contact-headline"
               className="font-[family-name:var(--font-display)] text-[28px] leading-[1.15] tracking-[-0.015em] text-[var(--color-text)] md:text-[40px] md:leading-[1.1]"
@@ -285,7 +285,7 @@ export default function ContactForm(): JSX.Element {
               {`Let's talk about your dog.`}
             </h2>
             <p className="mt-6 text-[17px] leading-[1.65] text-[var(--color-text-muted)]">
-              Tell us a bit about your pet and your neighborhood.
+              Tell us a bit about your pet and your neighborhood. We&apos;ll get back to you within one business day to discuss a walking schedule that works for you.
             </p>
           </div>
         </div>
