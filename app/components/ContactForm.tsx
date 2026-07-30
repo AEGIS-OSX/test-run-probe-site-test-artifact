@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface FormData {
@@ -17,159 +17,85 @@ interface FormErrors {
   message?: string;
 }
 
-type FormStatus = "idle" | "submitting" | "success" | "error";
-
-const initialFormData: FormData = {
-  name: "",
-  email: "",
-  neighborhood: "",
-  message: "",
-};
-
-function validateForm(data: FormData): FormErrors {
-  const errors: FormErrors = {};
-
-  if (!data.name.trim()) {
-    errors.name = "Name is required";
-  }
-
-  if (!data.email.trim()) {
-    errors.email = "Email is required";
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-    errors.email = "Please enter a valid email address";
-  }
-
-  if (!data.neighborhood.trim()) {
-    errors.neighborhood = "Neighborhood is required";
-  }
-
-  if (!data.message.trim()) {
-    errors.message = "Message is required";
-  }
-
-  return errors;
-}
-
 export default function ContactForm(): JSX.Element {
-  const [formData, setFormData] = useState<FormData>(initialFormData);
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [status, setStatus] = useState<FormStatus>("idle");
-  const [touched, setTouched] = useState<Record<keyof FormData, boolean>>({
-    name: false,
-    email: false,
-    neighborhood: false,
-    message: false,
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    email: "",
+    neighborhood: "",
+    message: "",
   });
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value } = e.target;
-      setFormData((prev) => ({ ...prev, [name]: value }));
+  const validate = (data: FormData): FormErrors => {
+    const newErrors: FormErrors = {};
+    if (!data.name.trim()) {
+      newErrors.name = "Name is required";
+    }
+    if (!data.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+    if (!data.neighborhood.trim()) {
+      newErrors.neighborhood = "Neighborhood is required";
+    }
+    if (!data.message.trim()) {
+      newErrors.message = "Message is required";
+    }
+    return newErrors;
+  };
 
-      if (touched[name as keyof FormData]) {
-        const fieldErrors = validateForm({ ...formData, [name]: value });
-        setErrors((prev) => ({ ...prev, [name]: fieldErrors[name as keyof FormErrors] }));
-      }
-    },
-    [formData, touched]
-  );
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name as keyof FormErrors]) {
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
+  };
 
-  const handleBlur = useCallback(
-    (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name } = e.target;
-      setTouched((prev) => ({ ...prev, [name]: true }));
-      const fieldErrors = validateForm(formData);
-      setErrors((prev) => ({ ...prev, [name]: fieldErrors[name as keyof FormErrors] }));
-    },
-    [formData]
-  );
-
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-
-      const allTouched: Record<keyof FormData, boolean> = {
-        name: true,
-        email: true,
-        neighborhood: true,
-        message: true,
-      };
-      setTouched(allTouched);
-
-      const validationErrors = validateForm(formData);
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+    const validationErrors = validate(formData);
+    if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-
-      if (Object.keys(validationErrors).length > 0) {
-        return;
-      }
-
-      setStatus("submitting");
-
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 1200));
-        setStatus("success");
-      } catch {
-        setStatus("error");
-      }
-    },
-    [formData]
-  );
-
-  const isSubmitting = status === "submitting";
+      return;
+    }
+    setIsSubmitting(true);
+    setErrors({});
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    setIsSubmitting(false);
+    setIsSuccess(true);
+  };
 
   return (
     <section
       id="contact"
-      className="py-[96px] bg-[var(--color-canvas)]"
-      aria-labelledby="contact-heading"
+      className="py-24 bg-[var(--color-canvas)]"
+      aria-labelledby="contact-headline"
     >
       <div className="max-w-[1200px] mx-auto px-6">
         <div className="max-w-[560px]">
           <AnimatePresence mode="wait">
-            {status === "success" ? (
+            {isSuccess ? (
               <motion.div
                 key="success"
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -16 }}
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                className="py-12"
               >
-                <div className="flex items-center gap-3 mb-4">
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: "var(--color-trust)" }}
-                  >
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M4 10L8 14L16 6"
-                        stroke="#ffffff"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                  <h2
-                    id="contact-heading"
-                    className="text-[28px] md:text-[40px] leading-[1.1] tracking-[-0.015em] font-[family-name:var(--font-display)]"
-                    style={{ color: "var(--color-text)" }}
-                  >
-                    Thanks! We&apos;ll be in touch soon.
-                  </h2>
-                </div>
-                <p
-                  className="text-[17px] leading-[1.65]"
-                  style={{ color: "var(--color-text-muted)" }}
+                <h2
+                  id="contact-headline"
+                  className="font-[family-name:var(--font-display)] text-[28px] leading-[1.15] tracking-[-0.015em] text-[var(--color-text)] md:text-[40px] md:leading-[1.1]"
                 >
-                  We received your message and will get back to you within one business day to discuss a walking schedule that works for you.
+                  {`Let's talk about your dog.`}
+                </h2>
+                <p className="mt-6 text-[17px] leading-[1.65] text-[var(--color-text-muted)]">
+                  Thanks! We&apos;ll be in touch soon.
                 </p>
               </motion.div>
             ) : (
@@ -181,265 +107,185 @@ export default function ContactForm(): JSX.Element {
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               >
                 <h2
-                  id="contact-heading"
-                  className="text-[28px] md:text-[40px] leading-[1.1] tracking-[-0.015em] font-[family-name:var(--font-display)] mb-4"
-                  style={{ color: "var(--color-text)" }}
+                  id="contact-headline"
+                  className="font-[family-name:var(--font-display)] text-[28px] leading-[1.15] tracking-[-0.015em] text-[var(--color-text)] md:text-[40px] md:leading-[1.1]"
                 >
-                  Let&apos;s talk about your dog.
+                  {`Let's talk about your dog.`}
                 </h2>
-                <p
-                  className="text-[17px] leading-[1.65] mb-10"
-                  style={{ color: "var(--color-text-muted)" }}
-                >
+                <p className="mt-6 text-[17px] leading-[1.65] text-[var(--color-text-muted)]">
                   Tell us a bit about your pet and your neighborhood. We&apos;ll get back to you within one business day to discuss a walking schedule that works for you.
                 </p>
 
-                <form onSubmit={handleSubmit} noValidate>
-                  <div className="flex flex-col gap-6">
-                    <div>
-                      <label
-                        htmlFor="name"
-                        className="block text-[14px] font-medium leading-[1.4] tracking-[0.06em] uppercase mb-2"
-                        style={{ color: "var(--color-text)" }}
-                      >
-                        Name
-                      </label>
-                      <input
-                        id="name"
-                        name="name"
-                        type="text"
-                        value={formData.name}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        disabled={isSubmitting}
-                        aria-invalid={errors.name ? "true" : "false"}
-                        aria-describedby={errors.name ? "name-error" : undefined}
-                        className="w-full px-4 py-3 bg-white border rounded text-[16px] leading-[1.5] transition-colors duration-200 ease-out disabled:opacity-50 disabled:cursor-not-allowed"
-                        style={{
-                          borderColor: errors.name
-                            ? "#C85A2A"
-                            : "var(--color-border)",
-                          borderRadius: "var(--radius-input)",
-                          color: "var(--color-text)",
-                          fontFamily: "var(--font-body)",
-                        }}
-                        placeholder="Your name"
-                      />
-                      <AnimatePresence>
-                        {errors.name && (
-                          <motion.p
-                            id="name-error"
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.2 }}
-                            className="text-[14px] leading-[1.5] mt-2"
-                            style={{ color: "var(--color-accent)" }}
-                          >
-                            {errors.name}
-                          </motion.p>
-                        )}
-                      </AnimatePresence>
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="email"
-                        className="block text-[14px] font-medium leading-[1.4] tracking-[0.06em] uppercase mb-2"
-                        style={{ color: "var(--color-text)" }}
-                      >
-                        Email
-                      </label>
-                      <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        disabled={isSubmitting}
-                        aria-invalid={errors.email ? "true" : "false"}
-                        aria-describedby={errors.email ? "email-error" : undefined}
-                        className="w-full px-4 py-3 bg-white border rounded text-[16px] leading-[1.5] transition-colors duration-200 ease-out disabled:opacity-50 disabled:cursor-not-allowed"
-                        style={{
-                          borderColor: errors.email
-                            ? "var(--color-accent)"
-                            : "var(--color-border)",
-                          borderRadius: "var(--radius-input)",
-                          color: "var(--color-text)",
-                          fontFamily: "var(--font-body)",
-                        }}
-                        placeholder="you@example.com"
-                      />
-                      <AnimatePresence>
-                        {errors.email && (
-                          <motion.p
-                            id="email-error"
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.2 }}
-                            className="text-[14px] leading-[1.5] mt-2"
-                            style={{ color: "var(--color-accent)" }}
-                          >
-                            {errors.email}
-                          </motion.p>
-                        )}
-                      </AnimatePresence>
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="neighborhood"
-                        className="block text-[14px] font-medium leading-[1.4] tracking-[0.06em] uppercase mb-2"
-                        style={{ color: "var(--color-text)" }}
-                      >
-                        Neighborhood
-                      </label>
-                      <input
-                        id="neighborhood"
-                        name="neighborhood"
-                        type="text"
-                        value={formData.neighborhood}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        disabled={isSubmitting}
-                        aria-invalid={errors.neighborhood ? "true" : "false"}
-                        aria-describedby={
-                          errors.neighborhood ? "neighborhood-error" : undefined
-                        }
-                        className="w-full px-4 py-3 bg-white border rounded text-[16px] leading-[1.5] transition-colors duration-200 ease-out disabled:opacity-50 disabled:cursor-not-allowed"
-                        style={{
-                          borderColor: errors.neighborhood
-                            ? "var(--color-accent)"
-                            : "var(--color-border)",
-                          borderRadius: "var(--radius-input)",
-                          color: "var(--color-text)",
-                          fontFamily: "var(--font-body)",
-                        }}
-                        placeholder="e.g., Silver Lake"
-                      />
-                      <AnimatePresence>
-                        {errors.neighborhood && (
-                          <motion.p
-                            id="neighborhood-error"
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.2 }}
-                            className="text-[14px] leading-[1.5] mt-2"
-                            style={{ color: "var(--color-accent)" }}
-                          >
-                            {errors.neighborhood}
-                          </motion.p>
-                        )}
-                      </AnimatePresence>
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="message"
-                        className="block text-[14px] font-medium leading-[1.4] tracking-[0.06em] uppercase mb-2"
-                        style={{ color: "var(--color-text)" }}
-                      >
-                        Message
-                      </label>
-                      <textarea
-                        id="message"
-                        name="message"
-                        rows={5}
-                        value={formData.message}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        disabled={isSubmitting}
-                        aria-invalid={errors.message ? "true" : "false"}
-                        aria-describedby={
-                          errors.message ? "message-error" : undefined
-                        }
-                        className="w-full px-4 py-3 bg-white border rounded text-[16px] leading-[1.5] transition-colors duration-200 ease-out resize-y disabled:opacity-50 disabled:cursor-not-allowed"
-                        style={{
-                          borderColor: errors.message
-                            ? "var(--color-accent)"
-                            : "var(--color-border)",
-                          borderRadius: "var(--radius-input)",
-                          color: "var(--color-text)",
-                          fontFamily: "var(--font-body)",
-                        }}
-                        placeholder="Tell us about your dog and what you're looking for..."
-                      />
-                      <AnimatePresence>
-                        {errors.message && (
-                          <motion.p
-                            id="message-error"
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.2 }}
-                            className="text-[14px] leading-[1.5] mt-2"
-                            style={{ color: "var(--color-accent)" }}
-                          >
-                            {errors.message}
-                          </motion.p>
-                        )}
-                      </AnimatePresence>
-                    </div>
-
-                    {status === "error" && (
-                      <motion.p
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-[14px] leading-[1.5]"
-                        style={{ color: "var(--color-accent)" }}
-                      >
-                        Something went wrong. Please try again.
-                      </motion.p>
-                    )}
-
-                    <div className="pt-2">
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="inline-flex items-center justify-center gap-2 px-6 py-3 text-[14px] font-medium leading-[1.4] tracking-[0.06em] uppercase border-none cursor-pointer transition-colors duration-200 ease-out disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[var(--color-accent-hover)]"
-                        style={{
-                          backgroundColor: "var(--color-accent)",
-                          color: "#ffffff",
-                          borderRadius: "var(--radius-button)",
-                          fontFamily: "var(--font-body)",
-                        }}
-                      >
-                        {isSubmitting ? (
-                          <>
-                            <svg
-                              className="animate-spin"
-                              width="16"
-                              height="16"
-                              viewBox="0 0 16 16"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                              aria-hidden="true"
-                            >
-                              <circle
-                                cx="8"
-                                cy="8"
-                                r="6"
-                                stroke="rgba(255,255,255,0.3)"
-                                strokeWidth="2"
-                              />
-                              <path
-                                d="M8 2A6 6 0 0 1 14 8"
-                                stroke="#ffffff"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                              />
-                            </svg>
-                            Sending...
-                          </>
-                        ) : (
-                          "Get in touch"
-                        )}
-                      </button>
-                    </div>
+                <form
+                  onSubmit={handleSubmit}
+                  className="mt-10 space-y-6"
+                  noValidate
+                >
+                  <div>
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium leading-[1.4] tracking-[0.06em] uppercase text-[var(--color-text)]"
+                    >
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      aria-invalid={errors.name ? "true" : "false"}
+                      aria-describedby={errors.name ? "name-error" : undefined}
+                      className={`mt-2 w-full px-4 py-3 bg-white border rounded text-base leading-[1.5] text-[var(--color-text)] font-[family-name:var(--font-body)] transition-colors duration-200 ease-out outline-none focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/15 focus:ring-offset-0 ${
+                        errors.name
+                          ? "border-[var(--color-accent)]"
+                          : "border-[var(--color-border)]"
+                      }`}
+                    />
+                    <AnimatePresence>
+                      {errors.name && (
+                        <motion.p
+                          id="name-error"
+                          role="alert"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="mt-2 text-sm leading-[1.5] text-[var(--color-accent)]"
+                        >
+                          {errors.name}
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
                   </div>
+
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium leading-[1.4] tracking-[0.06em] uppercase text-[var(--color-text)]"
+                    >
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      aria-invalid={errors.email ? "true" : "false"}
+                      aria-describedby={
+                        errors.email ? "email-error" : undefined
+                      }
+                      className={`mt-2 w-full px-4 py-3 bg-white border rounded text-base leading-[1.5] text-[var(--color-text)] font-[family-name:var(--font-body)] transition-colors duration-200 ease-out outline-none focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/15 focus:ring-offset-0 ${
+                        errors.email
+                          ? "border-[var(--color-accent)]"
+                          : "border-[var(--color-border)]"
+                      }`}
+                    />
+                    <AnimatePresence>
+                      {errors.email && (
+                        <motion.p
+                          id="email-error"
+                          role="alert"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="mt-2 text-sm leading-[1.5] text-[var(--color-accent)]"
+                        >
+                          {errors.email}
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="neighborhood"
+                      className="block text-sm font-medium leading-[1.4] tracking-[0.06em] uppercase text-[var(--color-text)]"
+                    >
+                      Neighborhood
+                    </label>
+                    <input
+                      type="text"
+                      id="neighborhood"
+                      name="neighborhood"
+                      value={formData.neighborhood}
+                      onChange={handleChange}
+                      aria-invalid={errors.neighborhood ? "true" : "false"}
+                      aria-describedby={
+                        errors.neighborhood ? "neighborhood-error" : undefined
+                      }
+                      className={`mt-2 w-full px-4 py-3 bg-white border rounded text-base leading-[1.5] text-[var(--color-text)] font-[family-name:var(--font-body)] transition-colors duration-200 ease-out outline-none focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/15 focus:ring-offset-0 ${
+                        errors.neighborhood
+                          ? "border-[var(--color-accent)]"
+                          : "border-[var(--color-border)]"
+                      }`}
+                    />
+                    <AnimatePresence>
+                      {errors.neighborhood && (
+                        <motion.p
+                          id="neighborhood-error"
+                          role="alert"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="mt-2 text-sm leading-[1.5] text-[var(--color-accent)]"
+                        >
+                          {errors.neighborhood}
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="message"
+                      className="block text-sm font-medium leading-[1.4] tracking-[0.06em] uppercase text-[var(--color-text)]"
+                    >
+                      Message
+                    </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      rows={5}
+                      value={formData.message}
+                      onChange={handleChange}
+                      aria-invalid={errors.message ? "true" : "false"}
+                      aria-describedby={
+                        errors.message ? "message-error" : undefined
+                      }
+                      className={`mt-2 w-full px-4 py-3 bg-white border rounded text-base leading-[1.5] text-[var(--color-text)] font-[family-name:var(--font-body)] transition-colors duration-200 ease-out outline-none resize-y focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/15 focus:ring-offset-0 ${
+                        errors.message
+                          ? "border-[var(--color-accent)]"
+                          : "border-[var(--color-border)]"
+                      }`}
+                    />
+                    <AnimatePresence>
+                      {errors.message && (
+                        <motion.p
+                          id="message-error"
+                          role="alert"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="mt-2 text-sm leading-[1.5] text-[var(--color-accent)]"
+                        >
+                          {errors.message}
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="inline-flex items-center justify-center px-6 py-3 bg-[var(--color-accent)] text-white rounded-md text-sm font-medium leading-[1.4] tracking-[0.06em] uppercase transition-colors duration-200 ease-out hover:bg-[var(--color-accent-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)] disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isSubmitting ? "Sending..." : "Get in touch"}
+                  </button>
                 </form>
               </motion.div>
             )}
