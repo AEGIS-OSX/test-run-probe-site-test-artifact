@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 export default function Footer() {
   return (
-    <footer className="bg-[var(--color-canvas-secondary)] py-[var(--space-2xl)]">
+    <footer className="bg-[var(--color-secondary)] py-[var(--space-2xl)]">
       <div className="container-main text-center">
         <motion.p
           className="font-[family-name:var(--font-body)] text-[var(--color-text)] text-[var(--text-base)]"
