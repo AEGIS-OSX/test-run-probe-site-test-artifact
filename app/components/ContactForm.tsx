@@ -78,47 +78,32 @@ export default function ContactForm(): JSX.Element {
       aria-labelledby="contact-headline"
     >
       <div className="max-w-[1200px] mx-auto px-6">
-        <div className="max-w-[560px]">
-          <AnimatePresence mode="wait">
-            {isSuccess ? (
-              <motion.div
-                key="success"
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -16 }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <h2
-                  id="contact-headline"
-                  className="font-[family-name:var(--font-display)] text-[28px] leading-[1.15] tracking-[-0.015em] text-[var(--color-text)] md:text-[40px] md:leading-[1.1]"
+        <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] gap-12 lg:gap-16 items-start">
+          {/* Left: Form */}
+          <div className="order-2 lg:order-1">
+            <AnimatePresence mode="wait">
+              {isSuccess ? (
+                <motion.div
+                  key="success"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -16 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                  className="py-12"
                 >
-                  {`Let's talk about your dog.`}
-                </h2>
-                <p className="mt-6 text-[17px] leading-[1.65] text-[var(--color-text-muted)]">
-                  Thanks! We&apos;ll be in touch soon.
-                </p>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="form"
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -16 }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <h2
-                  id="contact-headline"
-                  className="font-[family-name:var(--font-display)] text-[28px] leading-[1.15] tracking-[-0.015em] text-[var(--color-text)] md:text-[40px] md:leading-[1.1]"
-                >
-                  {`Let's talk about your dog.`}
-                </h2>
-                <p className="mt-6 text-[17px] leading-[1.65] text-[var(--color-text-muted)]">
-                  Tell us a bit about your pet and your neighborhood. We&apos;ll get back to you within one business day to discuss a walking schedule that works for you.
-                </p>
-
-                <form
+                  <p className="text-[17px] leading-[1.65] text-[var(--color-text)]">
+                    Thanks for reaching out! We&apos;ll be in touch within one business day.
+                  </p>
+                </motion.div>
+              ) : (
+                <motion.form
+                  key="form"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -16 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                   onSubmit={handleSubmit}
-                  className="mt-10 space-y-6"
+                  className="space-y-6"
                   noValidate
                 >
                   <div>
@@ -286,10 +271,23 @@ export default function ContactForm(): JSX.Element {
                   >
                     {isSubmitting ? "Sending..." : "Get in touch"}
                   </button>
-                </form>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                </motion.form>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Right: Content */}
+          <div className="order-1 lg:order-2">
+            <h2
+              id="contact-headline"
+              className="font-[family-name:var(--font-display)] text-[28px] leading-[1.15] tracking-[-0.015em] text-[var(--color-text)] md:text-[40px] md:leading-[1.1]"
+            >
+              {`Let's talk about your dog.`}
+            </h2>
+            <p className="mt-6 text-[17px] leading-[1.65] text-[var(--color-text-muted)]">
+              Tell us a bit about your pet and your neighborhood.
+            </p>
+          </div>
         </div>
       </div>
     </section>
