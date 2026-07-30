@@ -80,7 +80,7 @@ export default function Features() {
                   {feature.body}
                 </p>
                 <div className="mt-auto">
-                  <span className="inline-block px-3 py-1 rounded-full bg-[var(--color-trust-green)]/10 text-[var(--color-trust-green)] text-[14px] font-medium leading-[1.4] tracking-[0.06em] uppercase">
+                  <span className="inline-block px-3 py-1 rounded-full bg-[var(--color-trust-green)] text-white text-[14px] font-medium leading-[1.4] tracking-[0.06em] uppercase">
                     {feature.trustSignal}
                   </span>
                 </div>
