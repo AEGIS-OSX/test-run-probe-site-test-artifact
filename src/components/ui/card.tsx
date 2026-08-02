@@ -16,7 +16,7 @@ const paddingStyles: Record<CardPadding, string> = {
 function Card({ padding = "md", className = "", children, ...props }: CardProps) {
   return (
     <div
-      className={`bg-white rounded-[var(--radius-card)] border border-[var(--color-border)] ${paddingStyles[padding]} ${className}`}
+      className={`bg-[var(--color-surface)] rounded-[var(--radius-card)] border border-[var(--color-border)] ${paddingStyles[padding]} ${className}`}
       {...props}
     >
       {children}
