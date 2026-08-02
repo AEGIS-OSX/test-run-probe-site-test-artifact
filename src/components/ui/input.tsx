@@ -24,7 +24,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={ref}
           id={inputId}
-          className={`w-full px-4 py-3 bg-white border border-[var(--color-border)] rounded-[var(--radius-input)] text-base leading-[1.5] text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] transition-all duration-200 ease-out outline-none focus:border-[var(--color-accent)] focus:shadow-[0_0_0_2px_rgba(200,90,42,0.15)] focus-visible:border-[var(--color-accent)] focus-visible:shadow-[0_0_0_2px_rgba(200,90,42,0.15)] disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+          className={`w-full px-4 py-3 bg-white border border-[var(--color-border)] rounded-[var(--radius-input)] text-base leading-[1.5] text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] transition-all duration-200 ease-out outline-none focus:border-[var(--color-accent)] focus:shadow-[0_0_0_2px_var(--color-accent-glow)] focus-visible:border-[var(--color-accent)] focus-visible:shadow-[0_0_0_2px_var(--color-accent-glow)] disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
           {...props}
         />
         {error && (
