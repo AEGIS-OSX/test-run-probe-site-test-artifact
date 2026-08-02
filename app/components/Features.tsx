@@ -66,7 +66,7 @@ export default function Features() {
             >
               <div className="aspect-[4/3] relative overflow-hidden">
                 <ProjectImage
-                  id={feature.id}
+                  id={feature.id as "feature_1" | "feature_2" | "feature_3"}
                   className="object-cover w-full h-full transition-transform duration-700 hover:scale-105"
                 />
               </div>
