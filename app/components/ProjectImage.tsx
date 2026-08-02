@@ -17,3 +17,5 @@ export function ProjectImage({ id, className }: { id: AssetKey; className?: stri
     />
   );
 }
+
+export default ProjectImage;
