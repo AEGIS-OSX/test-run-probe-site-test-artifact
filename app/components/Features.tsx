@@ -1,6 +1,6 @@
 "use client";
 
-import { ProjectImage } from "@/app/components/ProjectImage";
+import { ProjectImage } from "./ProjectImage";
 import { motion } from "framer-motion";
 
 const features = [
