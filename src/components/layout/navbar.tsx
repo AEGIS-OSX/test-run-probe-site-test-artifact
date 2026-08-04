@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import ProjectImage from "@/app/components/ProjectImage";
+import { ProjectImage } from "@/app/components/ProjectImage";
 
 const NAV_LINKS = [
   { label: "Features", href: "#features" },

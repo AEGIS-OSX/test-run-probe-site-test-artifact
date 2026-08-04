@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import ProjectImage from "./ProjectImage";
+import { ProjectImage } from "./ProjectImage";
 
 export default function Testimonial() {
   return (
