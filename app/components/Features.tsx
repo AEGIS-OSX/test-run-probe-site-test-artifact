@@ -22,7 +22,7 @@ const features = [
     body: `We don't just watch the clock. Whether it's a 30-minute brisk walk or a quiet puppy visit, we tailor every outing to your dog's energy level and personality.`,
     trustSignal: "Personalized care for every breed.",
   },
-];
+] as const;
 
 const containerVariants = {
   hidden: { opacity: 0 },
