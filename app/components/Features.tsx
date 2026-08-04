@@ -1,59 +1,94 @@
 "use client";
 
-import { ProjectImage } from "./ProjectImage";
 import { motion } from "framer-motion";
+import { ProjectImage } from "./ProjectImage";
 
 const features = [
   {
-    title: "GPS-tracked walks",
-    description:
-      "See the exact route, distance, and duration in real time. Every walk is logged and shareable.",
-    imageId: "feature_gps",
+    id: "feature_1",
+    headline: "Always on time.",
+    body: `We know your schedule depends on ours. Our walkers are local neighbors who show up rain or shine, ensuring your dog never misses their midday break.`,
+    trustSignal: "GPS-tracked walks for your peace of mind.",
   },
   {
-    title: "Photo updates",
-    description:
-      "Get a picture of your pup at the park, on the trail, or just enjoying the sunshine.",
-    imageId: "feature_photo",
+    id: "feature_2",
+    headline: "Trained for the unexpected.",
+    body: `Every Acme walker is background-checked, fully insured, and certified in pet first aid. We treat your home and your pet with the same respect we give our own.`,
+    trustSignal: "Fully insured and background-checked.",
   },
   {
-    title: "Trusted walkers",
-    description:
-      "Every walker is background-checked, insured, and trained in pet first aid.",
-    imageId: "feature_trust",
+    id: "feature_3",
+    headline: "More than just a walk.",
+    body: `We don't just watch the clock. Whether it's a 30-minute brisk walk or a quiet puppy visit, we tailor every outing to your dog's energy level and personality.`,
+    trustSignal: "Personalized care for every breed.",
   },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
 export default function Features() {
   return (
-    <section className="py-24 bg-[var(--color-canvas)]">
-      <div className="container-main">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {features.map((feature, index) => (
-            <motion.div
-              key={feature.title}
-              className="flex flex-col items-center text-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{
-                duration: 0.5,
-                delay: index * 0.15,
-                ease: [0.22, 1, 0.36, 1],
-              }}
+    <section className="py-16 md:py-24 bg-[var(--color-canvas-primary)]">
+      <div className="max-w-[1200px] mx-auto px-6">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 md:pb-0 md:grid md:grid-cols-3 md:overflow-visible md:snap-none"
+        >
+          {features.map((feature) => (
+            <motion.article
+              key={feature.id}
+              variants={cardVariants}
+              className="min-w-[85vw] md:min-w-0 snap-center flex flex-col bg-[var(--color-canvas-secondary)] rounded-[8px] overflow-hidden border border-[var(--color-border)]"
             >
-              <div className="w-16 h-16 mb-6 relative">
-                <ProjectImage id={feature.imageId as any} className="w-full h-full object-contain" />
+              <div className="aspect-[4/3] relative overflow-hidden">
+                <ProjectImage
+                  id={feature.id}
+                  className="object-cover w-full h-full transition-transform duration-700 hover:scale-105"
+                />
               </div>
-              <h3 className="font-[family-name:var(--font-display)] text-[var(--color-text)] text-[20px] leading-[1.2] tracking-[-0.01em] mb-3">
-                {feature.title}
-              </h3>
-              <p className="text-[var(--color-text-muted)] text-[15px] leading-[1.6]">
-                {feature.description}
-              </p>
-            </motion.div>
+              
+              <div className="p-6 md:p-8 flex flex-col flex-grow">
+                <h3 className="font-[family-name:var(--font-display)] text-[22px] md:text-[28px] leading-[1.2] tracking-[-0.01em] text-[var(--color-text-primary)] mb-4">
+                  {feature.headline}
+                </h3>
+                
+                <p className="font-[family-name:var(--font-body)] text-[16px] md:text-[17px] leading-[1.6] text-[var(--color-text-muted)] mb-8 flex-grow">
+                  {feature.body}
+                </p>
+                
+                <div className="mt-auto">
+                  <span className="inline-block px-3 py-1 bg-[var(--color-trust)] text-white text-[14px] font-medium rounded-[4px] tracking-[0.02em]">
+                    {feature.trustSignal}
+                  </span>
+                </div>
+              </div>
+            </motion.article>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
