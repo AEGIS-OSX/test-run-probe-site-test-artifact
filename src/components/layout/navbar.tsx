@@ -1,95 +1,50 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import ProjectImage from "@/app/components/ProjectImage";
+import { ProjectImage } from "@/app/components/ProjectImage";
+import { motion } from "framer-motion";
+import Link from "next/link";
 
-const NAV_LINKS = [
-  { label: "Features", href: "#features" },
-  { label: "Testimonials", href: "#testimonials" },
-  { label: "Contact", href: "#contact" },
+const navLinks = [
+  { href: "#features", label: "Features" },
+  { href: "#pricing", label: "Pricing" },
+  { href: "#testimonials", label: "Testimonials" },
 ];
 
 export default function Navbar() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-
   return (
-    <header className="sticky top-0 z-50 bg-[var(--color-canvas)] border-b border-[var(--color-border)]">
-      <nav className="container-page flex items-center justify-between h-16 md:h-20">
-        <a href="#hero" className="flex-shrink-0" aria-label="Acme Walkies home">
-          <ProjectImage id="logo" />
-        </a>
-
-        <div className="hidden md:flex items-center gap-8">
-          {NAV_LINKS.map((link) => (
-            <a
+    <motion.header
+      className="fixed top-0 left-0 right-0 z-50 bg-[var(--color-canvas)]/80 backdrop-blur-md border-b border-[var(--color-border)]"
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <div className="container-main flex items-center justify-between h-16">
+        <Link href="/" className="flex items-center gap-2">
+          <div className="w-8 h-8 relative">
+            <ProjectImage id="logo" className="w-full h-full object-contain" />
+          </div>
+          <span className="font-[family-name:var(--font-display)] text-[var(--color-text)] text-[18px] leading-[1.2] tracking-[-0.01em]">
+            Acme Walkies
+          </span>
+        </Link>
+        <nav className="hidden md:flex items-center gap-8">
+          {navLinks.map((link) => (
+            <Link
               key={link.href}
               href={link.href}
-              className="text-[var(--color-text-muted)] font-body text-[14px] leading-[1.5] tracking-[0.02em] hover:text-[var(--color-text)] transition-colors duration-200"
+              className="text-[var(--color-text-muted)] text-[14px] leading-[1.5] tracking-[0.02em] hover:text-[var(--color-text)] transition-colors duration-200"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
-          <a href="#contact" className="btn-primary">
-            Get in touch
-          </a>
-        </div>
-
-        <button
-          className="md:hidden flex flex-col gap-[6px] p-2 bg-transparent border-none cursor-pointer"
-          onClick={() => setMobileOpen((prev) => !prev)}
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          aria-expanded={mobileOpen}
+        </nav>
+        <Link
+          href="#pricing"
+          className="hidden md:inline-flex items-center justify-center px-5 py-2.5 bg-[var(--color-text)] text-[var(--color-canvas)] text-[14px] font-medium leading-[1.5] tracking-[0.02em] rounded-full hover:opacity-90 transition-opacity duration-200"
         >
-          <motion.span
-            animate={mobileOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
-            className="block w-6 h-[2px] bg-[var(--color-text)] rounded-full origin-center"
-            transition={{ duration: 0.2, ease: "easeOut" }}
-          />
-          <motion.span
-            animate={mobileOpen ? { opacity: 0 } : { opacity: 1 }}
-            className="block w-6 h-[2px] bg-[var(--color-text)] rounded-full"
-            transition={{ duration: 0.15 }}
-          />
-          <motion.span
-            animate={mobileOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
-            className="block w-6 h-[2px] bg-[var(--color-text)] rounded-full origin-center"
-            transition={{ duration: 0.2, ease: "easeOut" }}
-          />
-        </button>
-      </nav>
-
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="md:hidden overflow-hidden bg-[var(--color-canvas)] border-t border-[var(--color-border)]"
-          >
-            <div className="container-page flex flex-col gap-4 py-6">
-              {NAV_LINKS.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="text-[var(--color-text-muted)] font-body text-base hover:text-[var(--color-text)] transition-colors duration-200"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {link.label}
-                </a>
-              ))}
-              <a
-                href="#contact"
-                className="btn-primary w-full text-center"
-                onClick={() => setMobileOpen(false)}
-              >
-                Get in touch
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
+          Get Started
+        </Link>
+      </div>
+    </motion.header>
   );
 }
